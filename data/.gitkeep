@@ -1,0 +1,4 @@
+# Bu klasör KDD Cup 1999 veri dosyalarını içerir
+# kddcup.data_10_percent.gz (train)
+# corrected.gz (test)
+# names.txt (opsiyonel açıklama)
