@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
-from .data import ATTACK_FAMILY
+from data import ATTACK_FAMILY
 
 BINARY_TARGET = 'y_binary'
 MULTI_TARGET  = 'y_family'   # veya 'y_attack' (tek tek saldırı ismi)
@@ -57,3 +57,38 @@ def split_features(df: pd.DataFrame):
     num_cols = [c for c in X.columns if c not in CATEGORICAL]
     cat_cols = [c for c in X.columns if c in CATEGORICAL]
     return X, y_bin, y_family, num_cols, cat_cols
+
+
+def preprocess_data(X_train, X_test, y_train=None, y_test=None):
+    """Veriyi ön işleme tabi tutar.
+    
+    Args:
+        X_train: Eğitim özellikleri
+        X_test: Test özellikleri
+        y_train: Eğitim etiketleri (opsiyonel)
+        y_test: Test etiketleri (opsiyonel)
+        
+    Returns:
+        tuple: İşlenmiş (X_train, X_test, y_train, y_test)
+    """
+    from sklearn.preprocessing import StandardScaler, LabelEncoder
+    from sklearn.compose import ColumnTransformer
+    from sklearn.preprocessing import OneHotEncoder
+    
+    # Kategorik ve sayısal kolonları ayır
+    num_cols = [c for c in X_train.columns if c not in CATEGORICAL]
+    cat_cols = [c for c in X_train.columns if c in CATEGORICAL]
+    
+    # Preprocessing pipeline
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ('num', StandardScaler(), num_cols),
+            ('cat', OneHotEncoder(drop='first', sparse_output=False), cat_cols)
+        ]
+    )
+    
+    # Fit ve transform
+    X_train_processed = preprocessor.fit_transform(X_train)
+    X_test_processed = preprocessor.transform(X_test)
+    
+    return X_train_processed, X_test_processed, y_train, y_test

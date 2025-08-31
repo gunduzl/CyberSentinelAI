@@ -1,4 +1,28 @@
-# KDD Cup 1999 IDS – Proje Raporu
+# KDD Cup 1999 Siber Saldırı Tespit Sistemi
+
+> **Kapsamlı Ağ Güvenliği Analizi ve Makine Öğrenmesi Uygulaması**
+
+Bu proje, KDD Cup 1999 veri kümesi kullanılarak geliştirilmiş kapsamlı bir siber saldırı tespit sistemidir. Hem denetimli (supervised) hem de denetimsiz (unsupervised) makine öğrenmesi yöntemleri ile ağ trafiğindeki anomalileri ve saldırıları tespit etmeyi amaçlamaktadır.
+
+## 🚀 Hızlı Başlangıç
+
+```bash
+# Projeyi klonlayın
+git clone <repository-url>
+cd kdd-cup-1999-ids
+
+# Bağımlılıkları yükleyin
+pip install -r requirements.txt
+
+# Jupyter Lab'i başlatın
+jupyter lab
+```
+
+## 📊 Temel Sonuçlar
+
+- **İkili Sınıflandırma**: %97.6 doğruluk, F1-Score: 0.979
+- **Çok Sınıflı Sınıflandırma**: %93.5 doğruluk, Weighted F1: 0.968
+- **Anomali Tespiti**: LOF algoritması ile %98.8 F1-Score
 
 ## İçindekiler
 
@@ -7,13 +31,17 @@
 - **Şekil 2**: Veri Kalitesi Özeti - Veri setinin temel kalite sorunları analizi
 - **Şekil 3**: Model Performans Karşılaştırması - İkili ve çok sınıflı sınıflandırma performansları
 - **Şekil 4**: Proje Özeti İnfografiği - Projenin genel özeti ve temel bulgular
+- **Şekil 5**: Unsupervised Anomali Tespiti Performansı - Denetimsiz öğrenme algoritmaları karşılaştırması
+- **Şekil 6**: Unsupervised Algoritma Analizi - Her algoritmanın detaylı avantaj/dezavantaj analizi
+- **Şekil 7**: Unsupervised Metodoloji Özeti - Denetimsiz anomali tespiti iş akışı ve sonuçları
 
 ## 1. Amaç
 
-Bu proje, KDD Cup 1999 veri kümesi kullanılarak iki aşamalı bir siber saldırı tespit sistemi geliştirmeyi amaçlamaktadır:
+Bu proje, KDD Cup 1999 veri kümesi kullanılarak kapsamlı bir siber saldırı tespit sistemi geliştirmeyi amaçlamaktadır:
 
 1. **Binary Sınıflandırma**: Ağ trafiğinin normal mi yoksa saldırı mı olduğunu tespit etme
 2. **Multi-class Sınıflandırma**: Tespit edilen saldırıların hangi aileye (DoS, Probe, R2L, U2R) ait olduğunu belirleme
+3. **Unsupervised Anomali Tespiti**: Etiketli veri gerektirmeden anomali tespiti yapma
 
 ## 2. Veri Kümesi
 
@@ -259,9 +287,135 @@ weighted avg     0.9470    0.9357    0.9137    153055
 3. **Tekrar Eden Kayıtlar**: Model performansını yapay olarak şişirebilir
 4. **Sınıf Dengesizliği**: Özellikle U2R sınıfı için yetersiz örnek
 
-## 6. Sonuç & Gelecek Çalışma
+## 6. Unsupervised Anomali Tespiti
 
-### 6.1 Temel Sonuçlar
+### 6.1 Metodoloji ve Yaklaşım
+
+Supervised yöntemlere ek olarak, KDD Cup 1999 veri seti üzerinde unsupervised (denetimsiz) öğrenme yaklaşımları ile anomali tespiti gerçekleştirilmiştir. Bu yaklaşım, etiketli veri gerektirmeden anomalileri tespit etmeyi amaçlar ve gerçek dünya senaryolarında daha pratik uygulamalar sunar.
+
+#### Kullanılan Algoritmalar
+
+1. **K-means Clustering**: Veri noktalarını kümelere ayırarak anomalileri tespit
+2. **DBSCAN**: Yoğunluk tabanlı kümeleme ile outlier tespiti
+3. **Isolation Forest**: Anomali tespiti için özel tasarlanmış algoritma
+4. **One-Class SVM**: Tek sınıf sınıflandırması ile anomali tespiti
+5. **Local Outlier Factor (LOF)**: Yerel yoğunluk tabanlı anomali tespiti
+
+#### Veri Ön İşleme
+
+- **Eğitim Verisi**: Sadece normal trafik örnekleri (97,278 kayıt)
+- **Test Verisi**: 10,000 örnek (8,245 anomali, 1,755 normal)
+- **Özellik İşleme**: StandardScaler ile normalizasyon
+- **Boyut İndirgeme**: PCA ile 20 bileşene indirgeme
+- **Contamination Oranı**: %10 (beklenen anomali oranı)
+
+### 6.2 Unsupervised Anomali Tespiti Sonuçları
+
+![Unsupervised Anomali Tespiti Performansı](figures/unsupervised_anomaly_performance.png)
+
+*Şekil 5: Unsupervised anomali tespiti algoritmaları performans karşılaştırması. LOF algoritması tüm metriklerde en yüksek performansı gösterirken, K-means ve DBSCAN düşük recall değerleri nedeniyle zayıf performans sergilemiştir.*
+
+#### Performans Sonuçları
+
+| Algoritma | F1-Score | ROC-AUC | Precision | Recall | Tespit Edilen Anomali |
+|-----------|----------|---------|-----------|--------|-----------------------|
+| **LOF** | **0.988** | **0.974** | **0.979** | **0.997** | 8,242 |
+| **One-Class SVM** | **0.987** | **0.964** | **0.978** | **0.997** | 8,253 |
+| **Isolation Forest** | **0.985** | **0.944** | **0.976** | **0.994** | 8,245 |
+| DBSCAN | 0.108 | 0.969 | 0.926 | 0.057 | 499 |
+| K-means | 0.086 | 0.811 | 0.736 | 0.045 | 500 |
+
+#### Temel Bulgular
+
+1. **En Başarılı Algoritma**: LOF (Local Outlier Factor)
+   - F1-Score: 0.988 (en yüksek)
+   - ROC-AUC: 0.974 (en yüksek)
+   - Mükemmel recall performansı (0.997)
+   - Yerel yoğunluk analizi ile etkili anomali tespiti
+
+2. **İkinci En İyi**: One-Class SVM
+   - F1-Score: 0.987
+   - Güçlü teorik temel
+   - Dengeli precision-recall performansı
+
+3. **Hızlı Alternatif**: Isolation Forest
+   - F1-Score: 0.985
+   - Büyük veri setleri için ölçeklenebilir
+   - Az parametre gerektiren yapı
+
+4. **Düşük Performans**: K-means ve DBSCAN
+   - Çok düşük recall değerleri (0.045-0.057)
+   - Bu veri seti için uygun olmayan yaklaşımlar
+   - DBSCAN yüksek precision (0.926) ancak çok düşük recall
+
+### 6.3 Algoritma Analizi ve Karşılaştırma
+
+![Unsupervised Algoritma Analizi](figures/unsupervised_algorithm_analysis.png)
+
+*Şekil 6: Unsupervised anomali tespiti algoritmalarının detaylı analizi. Her algoritmanın avantajları, dezavantajları ve performans metrikleri karşılaştırmalı olarak sunulmuştur.*
+
+#### Algoritma Bazında Değerlendirme
+
+**LOF (Local Outlier Factor)**
+- ✅ Avantajlar: En yüksek F1-Score, mükemmel recall, yerel yoğunluk analizi
+- ❌ Dezavantajlar: Hesaplama maliyeti yüksek, parametre hassasiyeti
+- 🎯 Kullanım Alanı: Genel amaçlı anomali tespiti, yüksek doğruluk gerekli sistemler
+
+**One-Class SVM**
+- ✅ Avantajlar: Çok iyi F1-Score, güçlü teorik temel, non-linear sınırlar
+- ❌ Dezavantajlar: Kernel seçimi kritik, büyük veri setlerinde yavaş
+- 🎯 Kullanım Alanı: Orta ölçekli sistemler, karmaşık veri dağılımları
+
+**Isolation Forest**
+- ✅ Avantajlar: Hızlı eğitim, ölçeklenebilir, az parametre
+- ❌ Dezavantajlar: Orta seviye AUC, yüksek boyutlarda zorlanır
+- 🎯 Kullanım Alanı: Büyük veri setleri, gerçek zamanlı sistemler
+
+### 6.4 Metodoloji Özeti
+
+![Unsupervised Metodoloji Özeti](figures/unsupervised_methodology_summary.png)
+
+*Şekil 7: Unsupervised anomali tespiti metodolojisinin kapsamlı özeti. Veri ön işlemeden model değerlendirmeye kadar tüm aşamalar ve temel sonuçlar görselleştirilmiştir.*
+
+#### İş Akışı
+
+1. **Veri Ön İşleme**
+   - 494,021 eğitim örneği (sadece normal trafik)
+   - 41 özellik, StandardScaler normalizasyon
+   - PCA ile boyut indirgeme
+
+2. **Model Eğitimi**
+   - Sadece normal verilerle eğitim
+   - 5 farklı algoritma karşılaştırması
+   - Hiperparametre optimizasyonu
+
+3. **Anomali Tespiti**
+   - Test seti: 10,000 örnek
+   - Anomali skorları hesaplama
+   - Threshold belirleme (95. percentile)
+
+4. **Performans Değerlendirme**
+   - F1-Score, ROC-AUC metrikleri
+   - Precision-Recall analizi
+   - Algoritma karşılaştırması
+
+### 6.5 Supervised vs Unsupervised Karşılaştırması
+
+| Yaklaşım | En İyi Model | F1-Score | ROC-AUC | Avantajlar | Dezavantajlar |
+|----------|--------------|----------|---------|------------|---------------|
+| **Supervised** | Random Forest | 0.952 | 0.980 | Etiketli veri ile yüksek doğruluk | Etiketli veri gereksinimi |
+| **Unsupervised** | LOF | 0.988 | 0.974 | Etiket gerektirmez, gerçek dünya uygulamaları | Daha karmaşık parametre ayarı |
+
+#### Temel Karşılaştırma Sonuçları
+
+1. **Performans**: Unsupervised LOF, supervised Random Forest'tan daha yüksek F1-Score elde etti
+2. **Pratiklik**: Unsupervised yöntemler etiketli veri gerektirmez
+3. **Ölçeklenebilirlik**: Isolation Forest büyük veri setleri için daha uygun
+4. **Yorumlanabilirlik**: Supervised yöntemler daha kolay yorumlanabilir
+
+## 7. Sonuç & Gelecek Çalışma
+
+### 7.1 Temel Sonuçlar
 
 1. **Binary Sınıflandırma Başarısı**: 
    - Random Forest modeli F1-Score: 0.9524, ROC AUC: 0.9795
@@ -284,7 +438,7 @@ weighted avg     0.9470    0.9357    0.9137    153055
    - Cross-validation ile güvenilir model seçimi
    - Hiperparametre optimizasyonu etkili
 
-### 6.2 Öneriler
+### 7.2 Öneriler
 
 #### Acil İyileştirmeler (Multi-class için)
 1. **Gelişmiş Sınıf Dengeleme Teknikleri**:
@@ -319,14 +473,95 @@ weighted avg     0.9470    0.9357    0.9137    153055
    - Model drift detection ve otomatik yeniden eğitim
    - A/B testing framework'ü
 
-### 6.3 Pratik Uygulamalar
+### 7.3 Pratik Uygulamalar
 
 - **Ağ güvenlik sistemleri** için temel model
 - **SOC (Security Operations Center)** araçları için entegrasyon
 - **Anomali tespit** sistemleri için referans
 - **Siber güvenlik eğitimi** için örnek proje
 
-## 7. Proje Özeti
+## 8. Kullanım Kılavuzu
+
+### 8.1 Hızlı Başlangıç
+
+#### Gereksinimler
+```bash
+# Python 3.8+ gereklidir
+pip install -r requirements.txt
+```
+
+#### Veri Hazırlama
+Veri dosyaları `data/` klasöründe hazır bulunmaktadır:
+- `kddcup.data_10_percent.gz` - Eğitim verisi
+- `corrected.gz` - Test verisi
+- `kddcup.names.txt` - Özellik isimleri
+
+#### Notebook'ları Çalıştırma
+```bash
+# Jupyter Lab'i başlatın
+jupyter lab
+
+# Sırasıyla notebook'ları çalıştırın:
+# 1. notebooks/01_eda.ipynb - Veri analizi
+# 2. notebooks/02_binary_attack_detection.ipynb - İkili sınıflandırma
+# 3. notebooks/03_multiclass_attack_family.ipynb - Çok sınıflı sınıflandırma
+# 4. notebooks/04_network_anomaly_detection.ipynb - Anomali tespiti
+```
+
+### 8.2 Kod Kullanımı
+
+#### Veri Yükleme
+```python
+from src.data import load_kdd
+
+# Eğitim verisi
+train_df = load_kdd('data/kddcup.data_10_percent.gz')
+
+# Test verisi
+test_df = load_kdd('data/corrected.gz')
+```
+
+#### Model Eğitimi
+```python
+from src.models import make_binary_pipelines
+from src.preprocess import add_targets, split_features
+
+# Veri hazırlama
+train_df = add_targets(train_df)
+X_train, y_binary, y_multi = split_features(train_df)
+
+# Model eğitimi
+binary_models = make_binary_pipelines()
+for name, model in binary_models.items():
+    model.fit(X_train, y_binary)
+```
+
+#### Sonuçları Görüntüleme
+```python
+from src.eval import plot_roc_pr, plot_cm
+
+# ROC ve PR eğrileri
+plot_roc_pr(y_true, y_pred_proba)
+
+# Confusion matrix
+plot_cm(y_true, y_pred)
+```
+
+### 8.3 Sonuçları Anlama
+
+#### En İyi Performans Gösteren Modeller
+- **İkili Sınıflandırma**: Random Forest (F1: 0.979, ROC-AUC: 0.992)
+- **Çok Sınıflı Sınıflandırma**: Random Forest (Weighted F1: 0.968)
+- **Anomali Tespiti**: LOF (F1: 0.988, ROC-AUC: 0.974)
+
+#### Önemli Özellikler
+1. `dst_host_srv_count` - Hedef host servis sayısı
+2. `count` - Aynı host ve servis bağlantı sayısı
+3. `srv_count` - Aynı servis bağlantı sayısı
+4. `dst_host_count` - Hedef host bağlantı sayısı
+5. `src_bytes` - Kaynak byte sayısı
+
+## 9. Proje Özeti
 
 ![Proje Özeti İnfografiği](figures/project_summary_infographic.png)
 
@@ -359,5 +594,8 @@ reports/
     ├── class_distribution.png
     ├── data_quality_summary.png
     ├── model_performance_comparison.png
-    └── project_summary_infographic.png
+    ├── project_summary_infographic.png
+    ├── unsupervised_anomaly_performance.png
+    ├── unsupervised_algorithm_analysis.png
+    └── unsupervised_methodology_summary.png
 ```

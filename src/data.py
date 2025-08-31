@@ -37,3 +37,50 @@ def load_kdd(path: str | Path, gz: bool = True) -> pd.DataFrame:
     path = Path(path)
     df = pd.read_csv(path, names=KDD_COLS, header=None, compression='gzip' if gz else None)
     return df
+
+
+def load_kdd_data():
+    """KDD Cup 1999 veri setini yükler ve train/test olarak böler.
+    
+    Returns:
+        tuple: (X_train, X_test, y_train, y_test)
+    """
+    from sklearn.model_selection import train_test_split
+    
+    # Veri dosyalarının yolları
+    data_dir = Path(__file__).parent.parent / 'data'
+    train_path = data_dir / 'kddcup.data_10_percent.gz'
+    test_path = data_dir / 'corrected.gz'
+    
+    # Eğitim verisini yükle
+    if train_path.exists():
+        df_train = load_kdd(train_path, gz=True)
+    else:
+        # Alternatif yol dene
+        train_path = data_dir / 'kddcup.data_10_percent'
+        if train_path.exists():
+            df_train = load_kdd(train_path, gz=False)
+        else:
+            raise FileNotFoundError(f"Eğitim veri dosyası bulunamadı: {train_path}")
+    
+    # Test verisini yükle
+    if test_path.exists():
+        df_test = load_kdd(test_path, gz=True)
+    else:
+        # Alternatif yol dene
+        test_path = data_dir / 'corrected'
+        if test_path.exists():
+            df_test = load_kdd(test_path, gz=False)
+        else:
+            # Test verisi yoksa train'den böl
+            X = df_train.drop('label', axis=1)
+            y = df_train['label']
+            return train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+    
+    # Özellikleri ve etiketleri ayır
+    X_train = df_train.drop('label', axis=1)
+    y_train = df_train['label']
+    X_test = df_test.drop('label', axis=1)
+    y_test = df_test['label']
+    
+    return X_train, X_test, y_train, y_test
