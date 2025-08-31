@@ -2,7 +2,64 @@
 
 > **Kapsamlı Ağ Güvenliği Analizi ve Makine Öğrenmesi Uygulaması**
 
-Bu proje, KDD Cup 1999 veri kümesi kullanılarak geliştirilmiş kapsamlı bir siber saldırı tespit sistemidir. Hem denetimli (supervised) hem de denetimsiz (unsupervised) makine öğrenmesi yöntemleri ile ağ trafiğindeki anomalileri ve saldırıları tespit etmeyi amaçlamaktadır.
+## 📋 İçindekiler
+
+1. [Proje Özeti](#proje-özeti)
+2. [Hızlı Başlangıç](#hızlı-başlangıç)
+3. [Temel Sonuçlar](#temel-sonuçlar)
+4. [Şekiller Listesi](#şekiller-listesi)
+5. [Amaç](#amaç)
+6. [Veri Kümesi](#veri-kümesi)
+   - 6.1 [Veri Kümesi Açıklaması](#veri-kümesi-açıklaması)
+   - 6.2 [Keşifsel Veri Analizi (EDA) Bulguları](#keşifsel-veri-analizi-eda-bulguları)
+   - 6.3 [Veri Kalitesi Sorunları](#veri-kalitesi-sorunları)
+7. [Yöntem](#yöntem)
+   - 7.1 [Ön İşleme Pipeline'ı](#ön-işleme-pipelineı)
+   - 7.2 [Model Pipeline'ı](#model-pipelineı)
+   - 7.3 [Algoritma Seçimi](#algoritma-seçimi)
+   - 7.4 [Hiperparametre Optimizasyonu](#hiperparametre-optimizasyonu)
+8. [Deneyler](#deneyler)
+   - 8.1 [Binary Sınıflandırma Sonuçları](#binary-sınıflandırma-sonuçları)
+   - 8.2 [Multi-class Sınıflandırma Sonuçları](#multi-class-sınıflandırma-sonuçları)
+9. [Tartışma](#tartışma)
+   - 9.1 [Etkili Özellikler](#etkili-özellikler)
+   - 9.2 [Yanlış Sınıflamalar ve Nedenleri](#yanlış-sınıflamalar-ve-nedenleri)
+   - 9.3 [Kısıtlar](#kısıtlar)
+10. [Unsupervised Anomali Tespiti](#unsupervised-anomali-tespiti)
+    - 10.1 [Metodoloji ve Yaklaşım](#metodoloji-ve-yaklaşım)
+    - 10.2 [Unsupervised Anomali Tespiti Sonuçları](#unsupervised-anomali-tespiti-sonuçları)
+    - 10.3 [Algoritma Analizi ve Karşılaştırma](#algoritma-analizi-ve-karşılaştırma)
+    - 10.4 [Metodoloji Özeti](#metodoloji-özeti)
+    - 10.5 [Supervised vs Unsupervised Karşılaştırması](#supervised-vs-unsupervised-karşılaştırması)
+11. [Sonuç & Gelecek Çalışma](#sonuç--gelecek-çalışma)
+    - 11.1 [Temel Sonuçlar](#temel-sonuçlar)
+    - 11.2 [Öneriler](#öneriler)
+    - 11.3 [Pratik Uygulamalar](#pratik-uygulamalar)
+12. [Kullanım Kılavuzu](#kullanım-kılavuzu)
+    - 12.1 [Hızlı Başlangıç](#hızlı-başlangıç-1)
+    - 12.2 [Kod Kullanımı](#kod-kullanımı)
+    - 12.3 [Sonuçları Anlama](#sonuçları-anlama)
+
+---
+
+## Proje Özeti
+
+![Proje Özeti İnfografiği](figures/project_summary_infographic.png)
+
+*Bu proje, KDD Cup 1999 veri kümesi kullanılarak geliştirilmiş kapsamlı bir siber saldırı tespit sistemidir. Hem denetimli (supervised) hem de denetimsiz (unsupervised) makine öğrenmesi yöntemleri ile ağ trafiğindeki anomalileri ve saldırıları tespit etmeyi amaçlamaktadır.*
+
+**Temel Bileşenler:**
+- 📊 **Keşifsel Veri Analizi**: Kapsamlı veri kalitesi ve dağılım analizi
+- 🎯 **İkili Sınıflandırma**: Normal vs Saldırı tespiti (%97.6 doğruluk)
+- 🔍 **Çok Sınıflı Sınıflandırma**: Saldırı türü belirleme (%93.5 doğruluk)
+- 🚨 **Anomali Tespiti**: Denetimsiz öğrenme ile anomali tespiti (%98.8 F1-Score)
+- 📈 **Görselleştirmeler**: 7 adet özel tasarım analiz grafiği
+
+**Kullanılan Notebook'lar:**
+- [`01_eda.ipynb`](../notebooks/01_eda.ipynb) - Keşifsel Veri Analizi
+- [`02_binary_attack_detection.ipynb`](../notebooks/02_binary_attack_detection.ipynb) - İkili Sınıflandırma
+- [`03_multiclass_attack_family.ipynb`](../notebooks/03_multiclass_attack_family.ipynb) - Çok Sınıflı Sınıflandırma
+- [`04_network_anomaly_detection.ipynb`](../notebooks/04_network_anomaly_detection.ipynb) - Anomali Tespiti
 
 ## 🚀 Hızlı Başlangıç
 
@@ -23,8 +80,6 @@ jupyter lab
 - **İkili Sınıflandırma**: %97.6 doğruluk, F1-Score: 0.979
 - **Çok Sınıflı Sınıflandırma**: %93.5 doğruluk, Weighted F1: 0.968
 - **Anomali Tespiti**: LOF algoritması ile %98.8 F1-Score
-
-## İçindekiler
 
 ### Şekiller Listesi
 - **Şekil 1**: Sınıf Dağılımları - KDD Cup 1999 veri setindeki ikili ve çok sınıflı dağılımlar
@@ -56,6 +111,8 @@ KDD Cup 1999 veri kümesi, ağ tabanlı saldırı tespit sistemleri için geliş
 - **Test seti**: `corrected.gz` (~311,029 kayıt)
 
 ### 2.2 Keşifsel Veri Analizi (EDA) Bulguları
+
+> 📓 **İlgili Notebook**: [`01_eda.ipynb`](../notebooks/01_eda.ipynb) - Bu bölümdeki tüm analizler ve görselleştirmeler detaylı olarak bu notebook'ta bulunmaktadır.
 
 #### Veri Boyutları
 - **Eğitim seti**: 494,021 kayıt × 42 özellik
@@ -159,6 +216,8 @@ Proje kapsamında iki temel algoritma karşılaştırılmıştır:
 
 ### 4.1 Binary Sınıflandırma Sonuçları
 
+> 📓 **İlgili Notebook**: [`02_binary_attack_detection.ipynb`](../notebooks/02_binary_attack_detection.ipynb) - İkili sınıflandırma modellerinin eğitimi, hiperparametre optimizasyonu ve detaylı performans analizleri bu notebook'ta yer almaktadır.
+
 #### Hiperparametre Optimizasyonu
 
 **Logistic Regression:**
@@ -192,6 +251,8 @@ weighted avg       0.95      0.95      0.95    153055
 ```
 
 ### 4.2 Multi-class Sınıflandırma Sonuçları
+
+> 📓 **İlgili Notebook**: [`03_multiclass_attack_family.ipynb`](../notebooks/03_multiclass_attack_family.ipynb) - Çok sınıflı sınıflandırma modellerinin geliştirilmesi, sınıf dengesizliği problemleri ve detaylı performans metrikleri bu notebook'ta incelenmiştir.
 
 #### Hiperparametre Optimizasyonu
 
@@ -288,6 +349,8 @@ weighted avg     0.9470    0.9357    0.9137    153055
 4. **Sınıf Dengesizliği**: Özellikle U2R sınıfı için yetersiz örnek
 
 ## 6. Unsupervised Anomali Tespiti
+
+> 📓 **İlgili Notebook**: [`04_network_anomaly_detection.ipynb`](../notebooks/04_network_anomaly_detection.ipynb) - Denetimsiz öğrenme algoritmaları ile anomali tespiti, 5 farklı algoritmanın karşılaştırması ve detaylı performans analizleri bu notebook'ta gerçekleştirilmiştir.
 
 ### 6.1 Metodoloji ve Yaklaşım
 
@@ -500,13 +563,33 @@ Veri dosyaları `data/` klasöründe hazır bulunmaktadır:
 ```bash
 # Jupyter Lab'i başlatın
 jupyter lab
-
-# Sırasıyla notebook'ları çalıştırın:
-# 1. notebooks/01_eda.ipynb - Veri analizi
-# 2. notebooks/02_binary_attack_detection.ipynb - İkili sınıflandırma
-# 3. notebooks/03_multiclass_attack_family.ipynb - Çok sınıflı sınıflandırma
-# 4. notebooks/04_network_anomaly_detection.ipynb - Anomali tespiti
 ```
+
+**Notebook'ları sırasıyla çalıştırın:**
+
+1. **[`01_eda.ipynb`](../notebooks/01_eda.ipynb)** - Keşifsel Veri Analizi
+   - Veri kümesi genel özellikleri
+   - Sınıf dağılımları ve dengesizlik analizi
+   - Veri kalitesi sorunları tespiti
+   - Temel istatistiksel analizler
+
+2. **[`02_binary_attack_detection.ipynb`](../notebooks/02_binary_attack_detection.ipynb)** - İkili Sınıflandırma
+   - Normal vs Saldırı tespiti
+   - Logistic Regression ve Random Forest karşılaştırması
+   - Hiperparametre optimizasyonu
+   - ROC-AUC ve F1-Score analizleri
+
+3. **[`03_multiclass_attack_family.ipynb`](../notebooks/03_multiclass_attack_family.ipynb)** - Çok Sınıflı Sınıflandırma
+   - Saldırı türü belirleme (DoS, Probe, R2L, U2R)
+   - Sınıf dengesizliği problemleri
+   - SMOTE ile veri dengeleme
+   - Detaylı confusion matrix analizleri
+
+4. **[`04_network_anomaly_detection.ipynb`](../notebooks/04_network_anomaly_detection.ipynb)** - Anomali Tespiti
+   - 5 farklı unsupervised algoritma karşılaştırması
+   - K-means, DBSCAN, Isolation Forest, One-Class SVM, LOF
+   - PCA ile boyut indirgeme
+   - Algoritma performans analizleri
 
 ### 8.2 Kod Kullanımı
 
