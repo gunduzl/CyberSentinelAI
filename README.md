@@ -7,38 +7,12 @@
 1. [Proje Özeti](#proje-özeti)
 2. [Hızlı Başlangıç](#hızlı-başlangıç)
 3. [Temel Sonuçlar](#temel-sonuçlar)
-4. [Şekiller Listesi](#şekiller-listesi)
-5. [Amaç](#amaç)
-6. [Veri Kümesi](#veri-kümesi)
-   - 6.1 [Veri Kümesi Açıklaması](#veri-kümesi-açıklaması)
-   - 6.2 [Keşifsel Veri Analizi (EDA) Bulguları](#keşifsel-veri-analizi-eda-bulguları)
-   - 6.3 [Veri Kalitesi Sorunları](#veri-kalitesi-sorunları)
-7. [Yöntem](#yöntem)
-   - 7.1 [Ön İşleme Pipeline'ı](#ön-işleme-pipelineı)
-   - 7.2 [Model Pipeline'ı](#model-pipelineı)
-   - 7.3 [Algoritma Seçimi](#algoritma-seçimi)
-   - 7.4 [Hiperparametre Optimizasyonu](#hiperparametre-optimizasyonu)
-8. [Deneyler](#deneyler)
-   - 8.1 [Binary Sınıflandırma Sonuçları](#binary-sınıflandırma-sonuçları)
-   - 8.2 [Multi-class Sınıflandırma Sonuçları](#multi-class-sınıflandırma-sonuçları)
-9. [Tartışma](#tartışma)
-   - 9.1 [Etkili Özellikler](#etkili-özellikler)
-   - 9.2 [Yanlış Sınıflamalar ve Nedenleri](#yanlış-sınıflamalar-ve-nedenleri)
-   - 9.3 [Kısıtlar](#kısıtlar)
-10. [Unsupervised Anomali Tespiti](#unsupervised-anomali-tespiti)
-    - 10.1 [Metodoloji ve Yaklaşım](#metodoloji-ve-yaklaşım)
-    - 10.2 [Unsupervised Anomali Tespiti Sonuçları](#unsupervised-anomali-tespiti-sonuçları)
-    - 10.3 [Algoritma Analizi ve Karşılaştırma](#algoritma-analizi-ve-karşılaştırma)
-    - 10.4 [Metodoloji Özeti](#metodoloji-özeti)
-    - 10.5 [Supervised vs Unsupervised Karşılaştırması](#supervised-vs-unsupervised-karşılaştırması)
-11. [Sonuç & Gelecek Çalışma](#sonuç--gelecek-çalışma)
-    - 11.1 [Temel Sonuçlar](#temel-sonuçlar)
-    - 11.2 [Öneriler](#öneriler)
-    - 11.3 [Pratik Uygulamalar](#pratik-uygulamalar)
-12. [Kullanım Kılavuzu](#kullanım-kılavuzu)
-    - 12.1 [Hızlı Başlangıç](#hızlı-başlangıç-1)
-    - 12.2 [Kod Kullanımı](#kod-kullanımı)
-    - 12.3 [Sonuçları Anlama](#sonuçları-anlama)
+4. [Veri Kümesi](#veri-kümesi)
+5. [Yöntem](#yöntem)
+6. [Deneyler](#deneyler)
+7. [Anomali Tespiti](#anomali-tespiti)
+8. [Sonuç](#sonuç)
+9. [Kullanım](#kullanım)
 
 ---
 
@@ -81,26 +55,11 @@ jupyter lab
 - **Çok Sınıflı Sınıflandırma**: %93.5 doğruluk, Weighted F1: 0.968
 - **Anomali Tespiti**: LOF algoritması ile %98.8 F1-Score
 
-### Şekiller Listesi
-- **Şekil 1**: Sınıf Dağılımları - KDD Cup 1999 veri setindeki ikili ve çok sınıflı dağılımlar
-- **Şekil 2**: Veri Kalitesi Özeti - Veri setinin temel kalite sorunları analizi
-- **Şekil 3**: Model Performans Karşılaştırması - İkili ve çok sınıflı sınıflandırma performansları
-- **Şekil 4**: Proje Özeti İnfografiği - Projenin genel özeti ve temel bulgular
-- **Şekil 5**: Unsupervised Anomali Tespiti Performansı - Denetimsiz öğrenme algoritmaları karşılaştırması
-- **Şekil 6**: Unsupervised Algoritma Analizi - Her algoritmanın detaylı avantaj/dezavantaj analizi
-- **Şekil 7**: Unsupervised Metodoloji Özeti - Denetimsiz anomali tespiti iş akışı ve sonuçları
 
-## 1. Amaç
 
-Bu proje, KDD Cup 1999 veri kümesi kullanılarak kapsamlı bir siber saldırı tespit sistemi geliştirmeyi amaçlamaktadır:
+## Veri Kümesi
 
-1. **Binary Sınıflandırma**: Ağ trafiğinin normal mi yoksa saldırı mı olduğunu tespit etme
-2. **Multi-class Sınıflandırma**: Tespit edilen saldırıların hangi aileye (DoS, Probe, R2L, U2R) ait olduğunu belirleme
-3. **Unsupervised Anomali Tespiti**: Etiketli veri gerektirmeden anomali tespiti yapma
-
-## 2. Veri Kümesi
-
-### 2.1 Veri Kümesi Açıklaması
+### Veri Kümesi Açıklaması
 
 KDD Cup 1999 veri kümesi, ağ tabanlı saldırı tespit sistemleri için geliştirilmiş bir benchmark veri setidir. Veri kümesi şu özelliklere sahiptir:
 
@@ -110,7 +69,7 @@ KDD Cup 1999 veri kümesi, ağ tabanlı saldırı tespit sistemleri için geliş
 - **Eğitim seti**: `kddcup.data_10_percent.gz` (~494,021 kayıt)
 - **Test seti**: `corrected.gz` (~311,029 kayıt)
 
-### 2.2 Keşifsel Veri Analizi (EDA) Bulguları
+### Keşifsel Veri Analizi (EDA) Bulguları
 
 > 📓 **İlgili Notebook**: [`01_eda.ipynb`](notebooks/01_eda.ipynb) - Bu bölümdeki tüm analizler ve görselleştirmeler detaylı olarak bu notebook'ta bulunmaktadır.
 
@@ -141,7 +100,7 @@ KDD Cup 1999 veri kümesi, ağ tabanlı saldırı tespit sistemleri için geliş
 - **service**: 70 benzersiz değer (en sık: http, smtp, ftp)
 - **flag**: 11 benzersiz değer (en sık: SF, S0, REJ)
 
-### 2.3 Veri Kalitesi Sorunları
+### Veri Kalitesi Sorunları
 
 1. **Ciddi Sınıf Dengesizliği**: 
    - U2R sınıfı sadece 52 örnek (%0.01)
@@ -165,9 +124,9 @@ KDD Cup 1999 veri kümesi, ağ tabanlı saldırı tespit sistemleri için geliş
 
 *Şekil 2: KDD Cup 1999 veri setinin kalite analizi. Grafik, veri setindeki temel kalite sorunlarını özetlemektedir: yüksek duplikasyon oranı (%70.53), ciddi sınıf dengesizliği ve sabit kolonların varlığı. Bu sorunlar model performansını önemli ölçüde etkilemektedir.*
 
-## 3. Yöntem
+## Yöntem
 
-### 3.1 Ön İşleme Pipeline'ı
+### Ön İşleme Pipeline'ı
 
 Veri ön işleme aşamaları:
 
@@ -176,7 +135,7 @@ Veri ön işleme aşamaları:
 3. **Kategorik Özellik Kodlama**: `OneHotEncoder` ile kodlama
 4. **Sınıf Dengeleme**: `SMOTE` ile sentetik örnekleme
 
-### 3.2 Model Pipeline'ı
+### Model Pipeline'ı
 
 Tüm modeller `scikit-learn` Pipeline yapısı kullanılarak geliştirilmiştir:
 
@@ -190,7 +149,7 @@ Pipeline:
 └── Classifier
 ```
 
-### 3.3 Algoritma Seçimi
+### Algoritma Seçimi
 
 Proje kapsamında iki temel algoritma karşılaştırılmıştır:
 
@@ -204,7 +163,7 @@ Proje kapsamında iki temel algoritma karşılaştırılmıştır:
    - Özellik önemlerini sağlama
    - Overfitting'e karşı dayanıklılık
 
-### 3.4 Hiperparametre Optimizasyonu
+### Hiperparametre Optimizasyonu
 
 - **Cross-Validation**: 5-fold StratifiedKFold
 - **Arama Yöntemi**: GridSearchCV
@@ -212,9 +171,9 @@ Proje kapsamında iki temel algoritma karşılaştırılmıştır:
   - Binary: F1-score
   - Multi-class: Macro F1-score
 
-## 4. Deneyler
+## Deneyler
 
-### 4.1 Binary Sınıflandırma Sonuçları
+### Binary Sınıflandırma Sonuçları
 
 > 📓 **İlgili Notebook**: [`02_binary_attack_detection.ipynb`](notebooks/02_binary_attack_detection.ipynb) - İkili sınıflandırma modellerinin eğitimi, hiperparametre optimizasyonu ve detaylı performans analizleri bu notebook'ta yer almaktadır.
 
@@ -250,7 +209,7 @@ Proje kapsamında iki temel algoritma karşılaştırılmıştır:
 weighted avg       0.95      0.95      0.95    153055
 ```
 
-### 4.2 Multi-class Sınıflandırma Sonuçları
+### Multi-class Sınıflandırma Sonuçları
 
 > 📓 **İlgili Notebook**: [`03_multiclass_attack_family.ipynb`](notebooks/03_multiclass_attack_family.ipynb) - Çok sınıflı sınıflandırma modellerinin geliştirilmesi, sınıf dengesizliği problemleri ve detaylı performans metrikleri bu notebook'ta incelenmiştir.
 
@@ -307,9 +266,9 @@ weighted avg     0.9470    0.9357    0.9137    153055
 2. **Recall Problemi**: R2L ve U2R sınıfları için çok düşük recall değerleri
 3. **Precision-Recall Dengesi**: Küçük sınıflar için yüksek precision ancak düşük recall
 
-## 5. Tartışma
+## Tartışma
 
-### 5.1 Etkili Özellikler
+### Etkili Özellikler
 
 **Random Forest Özellik Önemleri** (Top 10):
 
@@ -324,7 +283,7 @@ weighted avg     0.9470    0.9357    0.9137    153055
 9. `flag_SF` (0.035)
 10. `duration` (0.032)
 
-### 5.2 Yanlış Sınıflamalar ve Nedenleri
+### Yanlış Sınıflamalar ve Nedenleri
 
 #### Binary Sınıflandırma
 - **False Positive**: %4.3 (Normal trafiğin saldırı olarak etiketlenmesi)
@@ -341,18 +300,18 @@ weighted avg     0.9470    0.9357    0.9137    153055
 - Benzer ağ davranış kalıpları
 - Özellik uzayında örtüşme
 
-### 5.3 Kısıtlar
+### Kısıtlar
 
 1. **Veri Seti Yaşı**: KDD'99 1999 yılından kalma, güncel saldırı türlerini içermiyor
 2. **Sentetik Veri**: Gerçek ağ trafikinden ziyade simülasyon verisi
 3. **Tekrar Eden Kayıtlar**: Model performansını yapay olarak şişirebilir
 4. **Sınıf Dengesizliği**: Özellikle U2R sınıfı için yetersiz örnek
 
-## 6. Unsupervised Anomali Tespiti
+## Anomali Tespiti
 
 > 📓 **İlgili Notebook**: [`04_network_anomaly_detection.ipynb`](notebooks/04_network_anomaly_detection.ipynb) - Denetimsiz öğrenme algoritmaları ile anomali tespiti, 5 farklı algoritmanın karşılaştırması ve detaylı performans analizleri bu notebook'ta gerçekleştirilmiştir.
 
-### 6.1 Metodoloji ve Yaklaşım
+### Metodoloji ve Yaklaşım
 
 Supervised yöntemlere ek olarak, KDD Cup 1999 veri seti üzerinde unsupervised (denetimsiz) öğrenme yaklaşımları ile anomali tespiti gerçekleştirilmiştir. Bu yaklaşım, etiketli veri gerektirmeden anomalileri tespit etmeyi amaçlar ve gerçek dünya senaryolarında daha pratik uygulamalar sunar.
 
@@ -372,7 +331,7 @@ Supervised yöntemlere ek olarak, KDD Cup 1999 veri seti üzerinde unsupervised 
 - **Boyut İndirgeme**: PCA ile 20 bileşene indirgeme
 - **Contamination Oranı**: %10 (beklenen anomali oranı)
 
-### 6.2 Unsupervised Anomali Tespiti Sonuçları
+### Anomali Tespiti Sonuçları
 
 ![Unsupervised Anomali Tespiti Performansı](reports/figures/unsupervised_anomaly_performance.png)
 
@@ -411,7 +370,7 @@ Supervised yöntemlere ek olarak, KDD Cup 1999 veri seti üzerinde unsupervised 
    - Bu veri seti için uygun olmayan yaklaşımlar
    - DBSCAN yüksek precision (0.926) ancak çok düşük recall
 
-### 6.3 Algoritma Analizi ve Karşılaştırma
+### Algoritma Analizi ve Karşılaştırma
 
 ![Unsupervised Algoritma Analizi](reports/figures/unsupervised_algorithm_analysis.png)
 
@@ -434,7 +393,7 @@ Supervised yöntemlere ek olarak, KDD Cup 1999 veri seti üzerinde unsupervised 
 - ❌ Dezavantajlar: Orta seviye AUC, yüksek boyutlarda zorlanır
 - 🎯 Kullanım Alanı: Büyük veri setleri, gerçek zamanlı sistemler
 
-### 6.4 Metodoloji Özeti
+### Metodoloji Özeti
 
 ![Unsupervised Metodoloji Özeti](reports/figures/unsupervised_methodology_summary.png)
 
@@ -462,7 +421,7 @@ Supervised yöntemlere ek olarak, KDD Cup 1999 veri seti üzerinde unsupervised 
    - Precision-Recall analizi
    - Algoritma karşılaştırması
 
-### 6.5 Supervised vs Unsupervised Karşılaştırması
+### Supervised vs Unsupervised Karşılaştırması
 
 | Yaklaşım | En İyi Model | F1-Score | ROC-AUC | Avantajlar | Dezavantajlar |
 |----------|--------------|----------|---------|------------|---------------|
@@ -476,9 +435,9 @@ Supervised yöntemlere ek olarak, KDD Cup 1999 veri seti üzerinde unsupervised 
 3. **Ölçeklenebilirlik**: Isolation Forest büyük veri setleri için daha uygun
 4. **Yorumlanabilirlik**: Supervised yöntemler daha kolay yorumlanabilir
 
-## 7. Sonuç & Gelecek Çalışma
+## Sonuç
 
-### 7.1 Temel Sonuçlar
+### Temel Sonuçlar
 
 1. **Binary Sınıflandırma Başarısı**: 
    - Random Forest modeli F1-Score: 0.9524, ROC AUC: 0.9795
@@ -501,7 +460,7 @@ Supervised yöntemlere ek olarak, KDD Cup 1999 veri seti üzerinde unsupervised 
    - Cross-validation ile güvenilir model seçimi
    - Hiperparametre optimizasyonu etkili
 
-### 7.2 Öneriler
+### Öneriler
 
 #### Acil İyileştirmeler (Multi-class için)
 1. **Gelişmiş Sınıf Dengeleme Teknikleri**:
@@ -536,16 +495,16 @@ Supervised yöntemlere ek olarak, KDD Cup 1999 veri seti üzerinde unsupervised 
    - Model drift detection ve otomatik yeniden eğitim
    - A/B testing framework'ü
 
-### 7.3 Pratik Uygulamalar
+### Pratik Uygulamalar
 
 - **Ağ güvenlik sistemleri** için temel model
 - **SOC (Security Operations Center)** araçları için entegrasyon
 - **Anomali tespit** sistemleri için referans
 - **Siber güvenlik eğitimi** için örnek proje
 
-## 8. Kullanım Kılavuzu
+## Kullanım
 
-### 8.1 Hızlı Başlangıç
+### Hızlı Başlangıç
 
 #### Gereksinimler
 ```bash
@@ -591,7 +550,7 @@ jupyter lab
    - PCA ile boyut indirgeme
    - Algoritma performans analizleri
 
-### 8.2 Kod Kullanımı
+### Kod Kullanımı
 
 #### Veri Yükleme
 ```python
@@ -630,7 +589,7 @@ plot_roc_pr(y_true, y_pred_proba)
 plot_cm(y_true, y_pred)
 ```
 
-### 8.3 Sonuçları Anlama
+### Sonuçları Anlama
 
 #### En İyi Performans Gösteren Modeller
 - **İkili Sınıflandırma**: Random Forest (F1: 0.979, ROC-AUC: 0.992)
@@ -643,36 +602,3 @@ plot_cm(y_true, y_pred)
 3. `srv_count` - Aynı servis bağlantı sayısı
 4. `dst_host_count` - Hedef host bağlantı sayısı
 5. `src_bytes` - Kaynak byte sayısı
-
----
-
-**Proje Tamamlanma Tarihi**: Ocak 2025  
-**Geliştirici**: KDD Cup 1999 IDS Analiz Ekibi  
-**Versiyon**: 2.0 (Görselleştirmeler ile Genişletilmiş)
-
-### Ek Bilgiler
-
-**Kullanılan Görselleştirme Araçları:**
-- Python matplotlib ve seaborn kütüphaneleri
-- Özel tasarım infografik şablonları
-- Renk paleti: Profesyonel mavi-turuncu tema
-
-**Rapor Özellikleri:**
-- 7 adet özel tasarım görselleştirme
-- Kapsamlı veri analizi ve model karşılaştırması
-- Detaylı performans metrikleri ve açıklamalar
-- Gelecek çalışmalar için öneriler
-
-**Dosya Yapısı:**
-```
-reports/
-├── report.md (Detaylı rapor)
-└── figures/
-    ├── class_distribution.png
-    ├── data_quality_summary.png
-    ├── model_performance_comparison.png
-    ├── project_summary_infographic.png
-    ├── unsupervised_anomaly_performance.png
-    ├── unsupervised_algorithm_analysis.png
-    └── unsupervised_methodology_summary.png
-```
